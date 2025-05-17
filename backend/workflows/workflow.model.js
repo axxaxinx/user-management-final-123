@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
       autoIncrement: true
     },
     type: {
-      type: DataTypes.ENUM('Onboarding', 'DepartmentChange', 'Termination'),
+      type: DataTypes.ENUM('Onboarding', 'DepartmentChange', 'Termination', 'EquipmentRequest', 'LeaveRequest', 'ResourceRequest'),
       allowNull: false
     },
     status: {
@@ -26,6 +26,7 @@ module.exports = (sequelize) => {
 
   Workflow.associate = (models) => {
     Workflow.belongsTo(models.Employee, { foreignKey: 'employeeId', as: 'employee' });
+    Workflow.belongsTo(models.Request, { foreignKey: 'requestId', as: 'request' });
   };
 
   return Workflow;

@@ -129,8 +129,142 @@ async function initialize() {
 
         // Sync models with database
         console.log('Syncing models with database...');
-        await sequelize.sync({ alter: true });
-        console.log('Database synchronized successfully.');
+        
+        try {
+            // Disable foreign key checks and set unique checks to 0
+            await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+            await sequelize.query('SET UNIQUE_CHECKS = 0');
+            
+            // Drop all tables and their constraints
+            const dropTablesQuery = `
+                SELECT CONCAT('DROP TABLE IF EXISTS \`', table_name, '\`;')
+                FROM information_schema.tables
+                WHERE table_schema = '${database}';
+            `;
+            
+            const [tables] = await sequelize.query(dropTablesQuery);
+            for (const row of tables) {
+                const dropQuery = Object.values(row)[0];
+                await sequelize.query(dropQuery);
+            }
+            
+            // Create tables manually in correct order with backticks
+            await sequelize.query(`
+                CREATE TABLE IF NOT EXISTS \`Accounts\` (
+                    \`id\` INTEGER auto_increment,
+                    \`email\` VARCHAR(255) NOT NULL,
+                    \`passwordHash\` VARCHAR(255) NOT NULL,
+                    \`firstName\` VARCHAR(255),
+                    \`lastName\` VARCHAR(255),
+                    \`role\` VARCHAR(255) DEFAULT 'User',
+                    \`verificationToken\` VARCHAR(255),
+                    \`verified\` DATETIME,
+                    \`resetToken\` VARCHAR(255),
+                    \`resetTokenExpires\` DATETIME,
+                    \`passwordReset\` DATETIME,
+                    \`createdAt\` DATETIME NOT NULL,
+                    \`updatedAt\` DATETIME NOT NULL,
+                    PRIMARY KEY (\`id\`)
+                ) ENGINE=InnoDB;
+            `);
+
+            await sequelize.query(`
+                CREATE TABLE IF NOT EXISTS \`Departments\` (
+                    \`id\` INTEGER auto_increment,
+                    \`name\` VARCHAR(255) NOT NULL,
+                    \`description\` TEXT,
+                    \`createdAt\` DATETIME NOT NULL,
+                    \`updatedAt\` DATETIME NOT NULL,
+                    PRIMARY KEY (\`id\`)
+                ) ENGINE=InnoDB;
+            `);
+
+            await sequelize.query(`
+                CREATE TABLE IF NOT EXISTS \`Employees\` (
+                    \`id\` INTEGER auto_increment,
+                    \`employeeId\` VARCHAR(255) NOT NULL,
+                    \`position\` VARCHAR(255) NOT NULL,
+                    \`hireDate\` DATETIME NOT NULL,
+                    \`status\` VARCHAR(255) DEFAULT 'Active',
+                    \`jobTitle\` VARCHAR(255),
+                    \`userId\` INTEGER,
+                    \`departmentId\` INTEGER,
+                    \`reportingTo\` INTEGER,
+                    \`createdAt\` DATETIME NOT NULL,
+                    \`updatedAt\` DATETIME NOT NULL,
+                    PRIMARY KEY (\`id\`),
+                    FOREIGN KEY (\`userId\`) REFERENCES \`Accounts\`(\`id\`) ON DELETE SET NULL,
+                    FOREIGN KEY (\`departmentId\`) REFERENCES \`Departments\`(\`id\`) ON DELETE SET NULL,
+                    FOREIGN KEY (\`reportingTo\`) REFERENCES \`Employees\`(\`id\`) ON DELETE SET NULL
+                ) ENGINE=InnoDB;
+            `);
+
+            await sequelize.query(`
+                CREATE TABLE IF NOT EXISTS \`RefreshTokens\` (
+                    \`id\` INTEGER auto_increment,
+                    \`token\` VARCHAR(255) NOT NULL,
+                    \`expires\` DATETIME NOT NULL,
+                    \`createdAt\` DATETIME NOT NULL,
+                    \`updatedAt\` DATETIME NOT NULL,
+                    \`AccountId\` INTEGER,
+                    PRIMARY KEY (\`id\`),
+                    FOREIGN KEY (\`AccountId\`) REFERENCES \`Accounts\`(\`id\`) ON DELETE CASCADE
+                ) ENGINE=InnoDB;
+            `);
+
+            await sequelize.query(`
+                CREATE TABLE IF NOT EXISTS \`Requests\` (
+                    \`id\` INTEGER auto_increment,
+                    \`type\` ENUM('Equipment', 'Leave', 'Resources') NOT NULL,
+                    \`status\` ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',
+                    \`description\` TEXT,
+                    \`employeeId\` INTEGER,
+                    \`createdAt\` DATETIME NOT NULL,
+                    \`updatedAt\` DATETIME NOT NULL,
+                    PRIMARY KEY (\`id\`),
+                    FOREIGN KEY (\`employeeId\`) REFERENCES \`Employees\`(\`id\`) ON DELETE SET NULL
+                ) ENGINE=InnoDB;
+            `);
+
+            await sequelize.query(`
+                CREATE TABLE IF NOT EXISTS \`RequestItems\` (
+                    \`id\` INTEGER auto_increment,
+                    \`name\` VARCHAR(255) NOT NULL,
+                    \`quantity\` INTEGER NOT NULL DEFAULT 1,
+                    \`details\` TEXT,
+                    \`requestId\` INTEGER NOT NULL,
+                    \`createdAt\` DATETIME NOT NULL,
+                    \`updatedAt\` DATETIME NOT NULL,
+                    PRIMARY KEY (\`id\`),
+                    FOREIGN KEY (\`requestId\`) REFERENCES \`Requests\`(\`id\`) ON DELETE CASCADE
+                ) ENGINE=InnoDB;
+            `);
+
+            await sequelize.query(`
+                CREATE TABLE IF NOT EXISTS \`Workflows\` (
+                    \`id\` INTEGER auto_increment,
+                    \`type\` ENUM('Onboarding', 'DepartmentChange', 'Termination', 'EquipmentRequest', 'LeaveRequest', 'ResourceRequest') NOT NULL,
+                    \`status\` ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',
+                    \`details\` TEXT,
+                    \`employeeId\` INTEGER,
+                    \`requestId\` INTEGER,
+                    \`createdAt\` DATETIME NOT NULL,
+                    \`updatedAt\` DATETIME NOT NULL,
+                    PRIMARY KEY (\`id\`),
+                    FOREIGN KEY (\`employeeId\`) REFERENCES \`Employees\`(\`id\`) ON DELETE SET NULL,
+                    FOREIGN KEY (\`requestId\`) REFERENCES \`Requests\`(\`id\`) ON DELETE SET NULL
+                ) ENGINE=InnoDB;
+            `);
+
+            // Re-enable checks
+            await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+            await sequelize.query('SET UNIQUE_CHECKS = 1');
+            
+            console.log('Database synchronized successfully.');
+        } catch (error) {
+            console.error('Error during table operations:', error);
+            throw error;
+        }
     } catch (error) {
         console.error('Fatal error during database initialization:');
         console.error(error);

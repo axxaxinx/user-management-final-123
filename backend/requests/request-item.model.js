@@ -1,40 +1,42 @@
 const { DataTypes } = require('sequelize');
 
-module.exports = model;
+module.exports = (sequelize) => {
+  const RequestItem = sequelize.define('RequestItem', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1
+    },
+    details: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    requestId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Requests',
+        key: 'id'
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    }
+  }, {
+    timestamps: true
+  });
 
-function model(sequelize) {
-    const attributes = {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        quantity: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 1
-        },
-        created: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW
-        },
-        updated: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW
-        }
-    };
+  RequestItem.associate = (models) => {
+    RequestItem.belongsTo(models.Request, { foreignKey: 'requestId', as: 'request' });
+  };
 
-    const options = {
-        defaultScope: {
-            attributes: { exclude: [] }
-        }
-    };
-
-    return sequelize.define('requestItem', attributes, options);
-}
+  return RequestItem;
+};

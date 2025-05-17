@@ -21,9 +21,21 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     status: {
-      type: DataTypes.ENUM('Active', 'Inactive'),
+      type: DataTypes.ENUM('Active', 'Inactive', 'OnLeave', 'Terminated'),
       allowNull: false,
       defaultValue: 'Active'
+    },
+    jobTitle: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    reportingTo: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Employees',
+        key: 'id'
+      }
     }
   }, {
     timestamps: true
@@ -33,6 +45,9 @@ module.exports = (sequelize) => {
     Employee.belongsTo(models.Account, { foreignKey: 'userId', as: 'user' });
     Employee.belongsTo(models.Department, { foreignKey: 'departmentId', as: 'department' });
     Employee.hasMany(models.Workflow, { foreignKey: 'employeeId', as: 'workflows' });
+    Employee.hasMany(models.Request, { foreignKey: 'employeeId', as: 'requests' });
+    Employee.belongsTo(Employee, { foreignKey: 'reportingTo', as: 'manager' });
+    Employee.hasMany(Employee, { foreignKey: 'reportingTo', as: 'subordinates' });
   };
 
   return Employee;
