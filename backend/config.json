@@ -1,0 +1,20 @@
+{
+    
+    "database": {
+        "host": "153.92.15.31",
+        "user": "u875409848_novela",
+        "password": "9T2Z5$3UKkgSYzE",
+        "database": "u875409848_novela"
+    },
+    "secret": "terces",
+    "emailFrom": "info@node-mysql-signup-verification-api.com",
+    "smtpOptions": {
+        "host": "smtp.ethereal.email",
+        "port": 587,
+        "secure": false,
+        "auth": {
+            "user": "else.eichmann@ethereal.email",
+            "pass": "SVSNG5vRP8eyjTG2GB"
+        }
+    }
+}
