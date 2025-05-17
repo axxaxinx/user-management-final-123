@@ -1,10 +1,10 @@
 {
   "version": 2,
+  "public": true,
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "dist/angular-signup-verification-boilerplate",
   "framework": "angular",
   "rewrites": [
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 } 
