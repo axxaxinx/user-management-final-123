@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
-    "build": "ng build",
-    "vercel-build": "npm install && npm install -g @angular/cli@17.2.0 && ng build",
+    "build": "ng build --configuration production",
+    "vercel-build": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
