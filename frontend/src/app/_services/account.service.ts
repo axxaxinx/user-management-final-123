@@ -13,7 +13,7 @@ const baseUrl = `${environment.apiUrl}/accounts`;
 export class AccountService {
     private accountSubject: BehaviorSubject<Account | null>;
     public account: Observable<Account | null>;
-    private refreshTokenTimeout?: NodeJS.Timeout;
+    private refreshTokenTimeout?: number;
 
     constructor(
         private router: Router,
