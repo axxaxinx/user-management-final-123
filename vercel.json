@@ -24,16 +24,22 @@
       "dest": "backend/server.js"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
     },
     {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
+      "src": "/(.*\\.[a-z0-9]{1,})",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 } 

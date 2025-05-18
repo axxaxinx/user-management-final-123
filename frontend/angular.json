@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "./dist/frontend",
+            "outputPath": "dist/frontend",
             "index": "../index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -25,6 +25,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "baseHref": "/",
             "assets": [
               "src/favicon.ico",
               "src/assets"
