@@ -25,19 +25,19 @@ app.use(cookieParser());
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // Basic route for testing
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     res.json({ message: 'Backend API is running' });
 });
 
 // api routes
-app.use('/accounts', require('./accounts/accounts.controller'));
-app.use('/employees', require('./employees/employees.controller'));
-app.use('/departments', require('./departments/departments.controller'));
-app.use('/workflows', require('./workflows/workflows.controller'));
-app.use('/requests', require('./requests/request.controller'));
+app.use('/api/accounts', require('./accounts/accounts.controller'));
+app.use('/api/employees', require('./employees/employees.controller'));
+app.use('/api/departments', require('./departments/departments.controller'));
+app.use('/api/workflows', require('./workflows/workflows.controller'));
+app.use('/api/requests', require('./requests/request.controller'));
 
 // swagger docs route
-app.use('/api-docs', require('./_helpers/swagger'));
+app.use('/api/api-docs', require('./_helpers/swagger'));
 
 // global error handler
 app.use(errorHandler);
