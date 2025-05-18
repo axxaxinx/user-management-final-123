@@ -3,11 +3,23 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
-    "start": "cd backend && npm install && npm start"
+    "install": "concurrently --kill-others-on-fail \"cd frontend && npm install\" \"cd backend && npm install\"",
+    "start": "concurrently --kill-others-on-fail --names \"FRONTEND,BACKEND\" --prefix-colors \"blue,green\" \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "dev": "concurrently --kill-others-on-fail --names \"FRONTEND,BACKEND\" --prefix-colors \"blue,green\" \"npm run start:frontend\" \"cd backend && npm run start:dev\"",
+    "build": "concurrently --kill-others-on-fail --names \"FRONTEND,BACKEND\" --prefix-colors \"blue,green\" \"cd frontend && npm run build\" \"cd backend && npm run build\"",
+    "test": "concurrently --kill-others-on-fail --names \"FRONTEND,BACKEND\" --prefix-colors \"blue,green\" \"cd frontend && npm test\" \"cd backend && npm test\""
   },
-  "workspaces": [
-    "frontend",
-    "backend"
-  ]
-} 
+  "keywords": [
+    "angular",
+    "nodejs",
+    "mysql",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
