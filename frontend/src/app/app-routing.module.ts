@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HomeComponent } from './home';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
@@ -24,9 +23,6 @@ const routes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule],
-    providers: [
-    { provide: LocationStrategy, useClass: HashLocationStrategy }
-  ]
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }
