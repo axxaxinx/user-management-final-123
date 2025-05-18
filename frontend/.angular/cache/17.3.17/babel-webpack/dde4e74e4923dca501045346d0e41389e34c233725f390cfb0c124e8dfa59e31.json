@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class Account {\n  id;\n  title;\n  firstName;\n  lastName;\n  email;\n  role;\n  jwtToken;\n  status;\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

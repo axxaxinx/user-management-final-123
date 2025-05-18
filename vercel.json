@@ -13,7 +13,7 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "frontend/dist/angular-signup-verification-boilerplate",
+        "distDir": "frontend/dist",
         "buildCommand": "cd frontend && npm install && npm run build -- --configuration production"
       }
     }

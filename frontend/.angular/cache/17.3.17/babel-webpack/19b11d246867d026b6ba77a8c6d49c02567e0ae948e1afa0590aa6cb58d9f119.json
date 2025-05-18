@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: true,\n  apiUrl: 'https://your-backend.vercel.app' // Replace with your Vercel backend URL\n};","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
