@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
+    "preinstall": "npm install -g vercel",
     "install": "concurrently --kill-others-on-fail \"cd frontend && npm install\" \"cd backend && npm install\"",
     "start": "concurrently --kill-others-on-fail --names \"FRONTEND,BACKEND\" --prefix-colors \"blue,green\" \"npm run start:frontend\" \"npm run start:backend\"",
     "start:backend": "cd backend && npm start",
@@ -20,6 +21,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "vercel": "^32.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
