@@ -6,5 +6,5 @@ module.exports = {
         password: "9T2Z5$3UKkgSYzE",
         database: "u875409848_novela"
     },
-    secret: "THIS IS USED TO SIGN AND VERIFY JWT TOKENS, REPLACE IT WITH YOUR OWN SECRET, IT CAN BE ANY STRING"
+    secret: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlkIjoxLCJpYXQiOjE3NDc1ODA0OTgsImV4cCI6MTc0NzU4MTM5OH0.ajb5g-9bxQHcv0PRbJwYP6yH4WxIO9GeJYw6kF96sbU"
 }; 

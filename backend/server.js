@@ -47,6 +47,14 @@ app.use('/api/api-docs', require('./_helpers/swagger'));
 // global error handler
 app.use(errorHandler);
 
+app.use((err, req, res, next) => {
+    console.error('Error details:', err);
+    res.status(500).json({ 
+        message: err.message,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
+});
+
 // start server
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
