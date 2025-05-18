@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-
+import { Account } from '@app/_models';
 import { AccountService } from '@app/_services';
 
 @Component({
@@ -7,7 +7,9 @@ import { AccountService } from '@app/_services';
     standalone: false
 })
 export class DetailsComponent {
-    account = this.accountService.accountValue;
+    get account(): Account | null {
+        return this.accountService.accountValue;
+    }
 
     constructor(private accountService: AccountService) { }
 }
