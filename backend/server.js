@@ -24,7 +24,12 @@ app.use(cookieParser());
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
-// Basic route for testing
+// Root route for testing
+app.get('/', (req, res) => {
+    res.json({ message: 'Backend server is running' });
+});
+
+// Basic API route for testing
 app.get('/api', (req, res) => {
     res.json({ message: 'Backend API is running' });
 });

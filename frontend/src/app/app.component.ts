@@ -4,7 +4,8 @@ import { AccountService } from './_services';
 import { Account, Role } from './_models';
 
 @Component({
-    selector: 'app', templateUrl: 'app.component.html',
+    selector: 'app-root',
+    templateUrl: 'app.component.html',
     standalone: false
 })
 export class AppComponent {
